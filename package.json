@@ -2,7 +2,7 @@
   "name": "taped-electron",
   "version": "0.1.0",
   "description": "",
-  "bin": "./taped-electron.js",
+  "bin": "./taped-electron",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
