@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var join = require('path').join
+var electron = require('electron-prebuilt')
+var spawn = require('child_process').spawn
+var Readable = require('stream').Readable
+
+let args = [join(__dirname,'runner-up')].concat(process.argv.slice(2))
+let proc = spawn(electron, args, { stdio: 'inherit'})
+
+/*
+let reader = new Readable()
+reader._read = function(){}
+reader.pipe(faucet()).pipe(process.stdout)
+proc.stdout.on('data',(data)=>{
+    reader.push(data.toString())
+})
+*/
+proc.on('close',(code)=>{
+    process.exit(code)
+})

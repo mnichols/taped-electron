@@ -1,35 +1,34 @@
 'use strict';
-import app from 'app'
-import path from 'path'
-import glob from 'glob'
-import tape from 'blue-tape'
-import BrowserWindow from 'browser-window'
-import {ipcMain as ipc} from 'electron'
-import {remote} from 'electron'
 
-const runRendererTests = () => {
-    //main process tests
-    let tests = process.argv[2]
+var app = require('app')
+var path = require('path')
+var glob = require('glob')
+var tape = require('blue-tape')
+var BrowserWindow = require('browser-window')
+var ipc = require('electron').ipcMain
+var remote = require('electron').remote
+var opts = require('nomnom').parse()
+
+const runRendererTests = (tests, done) => {
     glob(tests,(err,files)=>{
         if(err) {
             console.error(err)
             return app.quit()
         }
-        let w = new BrowserWindow({width: 800, height: 600});
-        const html = 'file://' + path.resolve(__dirname, 'index.html');
-        w.webContents.on('dom-ready', function(){
-            w.send('renderer-test', {
+        const win = new BrowserWindow({width: 800, height: 600});
+        const html = 'file://' + path.resolve(__dirname, 'runner.html');
+        win.webContents.on('dom-ready', function(){
+            win.send('start-renderer-tests', {
                 files: files
             });
-            w.openDevTools();
+            win.openDevTools();
         });
-        w.loadURL(html);
+        win.loadURL(html);
 
         ipc.on('renderer-tests-finished', function(event){
-            event.sender.send('renderer-dead')
             setTimeout(()=>{
-                w.destroy()
-                app.quit()
+                win.destroy()
+                done()
             },1000)
         });
         ipc.on('console:out',function(event,args){
@@ -42,9 +41,7 @@ const runRendererTests = () => {
 }
 
 
-const runMainTests = () => {
-    //main process tests
-    let tests = process.argv[2]
+const runMainTests = (tests, done) => {
     if(tests) {
         glob(tests,(err,files)=>{
             if(err) {
@@ -54,12 +51,33 @@ const runMainTests = () => {
             files.forEach(f=>{
                 require(path.resolve(f))
             })
-            tape.onFinish(()=>{
-                app.quit()
-            })
+            tape.onFinish(done)
         })
     }
 }
+let done = (processTypes) => {
+    if(processTypes < 1) {
+        app.quit()
+    }
+}
 app.on('ready',() =>{
-    runRendererTests()
+    let rendererTests = (opts.r || opts.renderer)
+    let mainTests = (opts.m || opts.main)
+    //no process specified, so just assume the main process
+    if(!rendererTests || !mainTests) {
+        mainTests = opts[0]
+    }
+    let processTypes = 0
+    if(rendererTests) {
+        processTypes++
+        runRendererTests(rendererTests,() => {
+            done(--processTypes)
+        })
+    }
+    if(mainTests) {
+        processTypes++
+        runMainTests(mainTests, () => {
+            done(--processTypes)
+        })
+    }
 })

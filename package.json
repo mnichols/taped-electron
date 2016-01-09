@@ -1,8 +1,8 @@
 {
   "name": "taped-electron",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "bin": "./taped-electron.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,7 +15,8 @@
   "license": "MIT",
   "dependencies": {
     "babel-preset-node5": "^10.1.2",
-    "blue-tape": "^0.1.11"
+    "blue-tape": "^0.1.11",
+    "nomnom": "^1.8.1"
   },
   "devDependencies": {
     "tap-browser-el": "^2.0.0"

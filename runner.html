@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <script src="./loggify.js"></script>
+    </head>
+    <body>
+        <script>
+            var ipc  = require('electron').ipcRenderer
+            var tape = require('blue-tape')
+
+            // support es2015
+            require('babel-core/register')
+
+            ipc.on('start-renderer-tests',function(e,args){
+                tape.onFinish(function(){
+                    // notify our main process we are done
+                    ipc.send('renderer-tests-finished')
+                    // tape relies on process exit to output summary stats
+                    process.exit(0)
+                })
+                args.files.forEach(function(f) {
+                    require(f)
+                })
+            })
+
+        </script>
+    </body>
+</html>

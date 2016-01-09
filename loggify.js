@@ -1,8 +1,7 @@
 'use strict';
 /**
- * https://github.com/BrowserSync/browser-sync/issues/744
  * This middleware runs on the CLIENT and writes the console log
- * output back to the server via its socket connection.
+ * output back to the server via its ipc connection.
  * */
 (function ($window, $document) {
     // keep around so can call
