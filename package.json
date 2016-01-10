@@ -1,23 +1,28 @@
 {
   "name": "taped-electron",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "bin": "./taped-electron",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "electron",
+    "tape",
+    "test",
+    "baboon"
+  ],
   "babel": {
     "presets": [
       "node5"
     ]
   },
-  "author": "",
+  "author": "Mike Nichols <nichols.mike.s@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "babel-preset-node5": "^10.1.2",
     "babel-register": "^6.3.13",
     "blue-tape": "^0.1.11",
-    "nomnom": "^1.8.1",
-    "tape-catch": "^1.0.4"
+    "nomnom": "^1.8.1"
   }
 }
