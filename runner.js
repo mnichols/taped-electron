@@ -10,40 +10,48 @@ var remote = require('electron').remote
 var opts = require('nomnom').parse()
 
 const runRendererTests = (tests, done) => {
-    glob(tests,(err,files)=>{
-        if(err) {
-            console.error(err)
-            return app.quit()
+    if(tests) {
+        let globOpts = {
+            realpath: true //abs path name
         }
-        const win = new BrowserWindow({width: 800, height: 600});
-        const html = 'file://' + path.resolve(__dirname, 'runner.html');
-        win.webContents.on('dom-ready', function(){
-            win.send('start-renderer-tests', {
-                files: files
+        glob(tests, globOpts, (err,files)=>{
+            if(err) {
+                console.error(err)
+                return app.quit()
+            }
+            const win = new BrowserWindow({width: 800, height: 600});
+            const html = 'file://' + path.resolve(__dirname, 'runner.html');
+            win.webContents.on('dom-ready', function(){
+                win.send('start-renderer-tests', {
+                    files: files
+                });
+                win.openDevTools();
             });
-            win.openDevTools();
-        });
-        win.loadURL(html);
+            win.loadURL(html);
 
-        ipc.on('renderer-tests-finished', function(event){
-            setTimeout(()=>{
-                win.destroy()
-                done()
-            },1000)
-        });
-        ipc.on('console:out',function(event,args){
-            let item = JSON.parse(args)
-            console.log(item[1])
-            //console.log('\n')
+            ipc.on('renderer-tests-finished', function(event){
+                setTimeout(()=>{
+                    win.destroy()
+                    done()
+                },1000)
+            });
+            ipc.on('console:out',function(event,args){
+                let item = JSON.parse(args)
+                console.log(item[1])
+                //console.log('\n')
+            })
         })
-    })
 
+    }
 }
 
 
 const runMainTests = (tests, done) => {
     if(tests) {
-        glob(tests,(err,files)=>{
+        let globOpts = {
+            realpath: true //abs path name
+        }
+        glob(tests, globOpts, (err,files)=>{
             if(err) {
                 console.error(err)
                 return app.quit()
