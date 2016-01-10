@@ -64,7 +64,7 @@ app.on('ready',() =>{
     let rendererTests = (opts.r || opts.renderer)
     let mainTests = (opts.m || opts.main)
     //no process specified, so just assume the main process
-    if(!rendererTests || !mainTests) {
+    if(!rendererTests && !mainTests) {
         mainTests = opts[0]
     }
     let processTypes = 0
