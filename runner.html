@@ -11,15 +11,21 @@
             require('babel-core/register')
 
             ipc.on('start-renderer-tests',function(e,args){
-                tape.onFinish(function(){
+                try {
+                    tape.onFinish(function(){
+                        // notify our main process we are done
+                        ipc.send('renderer-tests-finished')
+                        // tape relies on process exit to output summary stats
+                        process.exit(0)
+                    })
+                    args.files.forEach(function(f) {
+                        require(f)
+                    })
+                } catch(err) {
                     // notify our main process we are done
-                    ipc.send('renderer-tests-finished')
-                    // tape relies on process exit to output summary stats
-                    process.exit(0)
-                })
-                args.files.forEach(function(f) {
-                    require(f)
-                })
+                    ipc.send('error', err)
+                    process.exit(1)
+                }
             })
 
         </script>

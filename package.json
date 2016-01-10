@@ -17,6 +17,7 @@
     "babel-preset-node5": "^10.1.2",
     "babel-register": "^6.3.13",
     "blue-tape": "^0.1.11",
-    "nomnom": "^1.8.1"
+    "nomnom": "^1.8.1",
+    "tape-catch": "^1.0.4"
   }
 }

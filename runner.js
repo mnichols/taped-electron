@@ -16,8 +16,8 @@ const runRendererTests = (tests, done) => {
         }
         glob(tests, globOpts, (err,files)=>{
             if(err) {
-                console.error(err)
-                return app.quit()
+                console.error('taped-electron','renderer process error',err)
+                return done(err)
             }
             const win = new BrowserWindow({width: 800, height: 600});
             const html = 'file://' + path.resolve(__dirname, 'runner.html');
@@ -29,6 +29,13 @@ const runRendererTests = (tests, done) => {
             });
             win.loadURL(html);
 
+            ipc.on('error', function(event, error ){
+                console.error('taped-electron','renderer process error',error)
+                setTimeout(()=>{
+                    win.destroy()
+                    done(error)
+                },500)
+            })
             ipc.on('renderer-tests-finished', function(event){
                 setTimeout(()=>{
                     win.destroy()
@@ -52,18 +59,26 @@ const runMainTests = (tests, done) => {
             realpath: true //abs path name
         }
         glob(tests, globOpts, (err,files)=>{
-            if(err) {
-                console.error(err)
-                return app.quit()
+            try {
+                if(err) {
+                    console.error('taped-electron','main process error',err)
+                    return done(err)
+                }
+                files.forEach(f=>{
+                    require(path.resolve(f))
+                })
+                tape.onFinish(done.bind(this))
+            } catch(err) {
+                console.error('taped-electron','main process error',err)
+                done(err)
             }
-            files.forEach(f=>{
-                require(path.resolve(f))
-            })
-            tape.onFinish(done)
         })
     }
 }
-let done = (processTypes) => {
+let done = (err,processTypes) => {
+    if(err) {
+        app.exit(1)
+    }
     if(processTypes < 1) {
         app.quit()
     }
@@ -78,14 +93,14 @@ app.on('ready',() =>{
     let processTypes = 0
     if(rendererTests) {
         processTypes++
-        runRendererTests(rendererTests,() => {
-            done(--processTypes)
+        runRendererTests(rendererTests,(err) => {
+            done(err, --processTypes)
         })
     }
     if(mainTests) {
         processTypes++
-        runMainTests(mainTests, () => {
-            done(--processTypes)
+        runMainTests(mainTests, (err) => {
+            done(err, --processTypes)
         })
     }
 })
