@@ -1,18 +1,21 @@
 'use strict';
-import { app, BrowserWindow, ipcMain as ipc, remote } from 'electron'
-import path from 'path'
-import glob from 'glob'
-import tape from 'blue-tape'
-import minimist from 'minimist'
 
-import dbg from 'debug'
-import packagejson from './package.json'
+const electron      = require('electron')
+const app           = electron.app
+const BrowserWindow = electron.BrowserWindow
+const ipc           = electron.ipcMain
+const remote        = electron.remote
+const path          = require('path')
+const glob          = require('glob')
+const tape          = require('blue-tape')
+const minimist      = require('minimist')
+const dbg           = require('debug')
+const packagejson   = require('./package.json')
 
-const log = dbg('taped-electron:debug')
-const opts = minimist(process.argv.slice(2))
+const log           = dbg('taped-electron:debug')
+const opts          = minimist(process.argv.slice(2))
 
-
-log('opts', opts)
+log('using opts', opts)
 
 
 const runRendererTests = (tests, done) => {
