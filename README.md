@@ -47,4 +47,7 @@ or
 `npm install tap-spec`
 `taped-electron --main ./test/main/**/*.* --renderer ./test/renderer/**/*.* | tap-spec`
 
+## Testing 
 
+If you want to confirm `taped-electron` you can clone the repo and `npm test`. You should see **2 failing tests** as well as **2 passing tests**.
+This tests both the main and renderer processes.
