@@ -4,7 +4,7 @@
   "description": "",
   "bin": "./taped-electron",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./taped-electron --main './test/main/**/*-test.js' --renderer './test/renderer/**/*-test.js'"
   },
   "keywords": [
     "electron",
@@ -12,17 +12,14 @@
     "test",
     "baboon"
   ],
-  "babel": {
-    "presets": [
-      "node5"
-    ]
-  },
   "author": "Mike Nichols <nichols.mike.s@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "babel-preset-node5": "^10.1.2",
-    "babel-register": "^6.3.13",
     "blue-tape": "^0.1.11",
-    "nomnom": "^1.8.1"
+    "debug": "^2.2.0",
+    "minimist": "^1.2.0"
+  },
+  "devDependencies": {
+    "electron-prebuilt-compile": "^1.2.5"
   }
 }
