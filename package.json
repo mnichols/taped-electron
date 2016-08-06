@@ -1,14 +1,16 @@
 {
   "name": "taped-electron",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "",
   "bin": "./taped-electron",
   "scripts": {
     "test": "./taped-electron --main './test/main/**/*-test.js' --renderer './test/renderer/**/*-test.js'"
   },
   "babel": {
-      "presets": ["es2015", "stage-0"]
-
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
   },
   "keywords": [
     "electron",
