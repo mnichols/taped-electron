@@ -6,7 +6,7 @@ var join = require('path').join
 var spawn = require('child_process').spawn
 var Readable = require('stream').Readable
 
-let args = [join(__dirname,'runner.js')].concat(process.argv.slice(2))
+let args = [join(__dirname,'runner-up.js')].concat(process.argv.slice(2))
 let proc = spawn('./node_modules/.bin/electron', args, { stdio: 'inherit'})
 
 /*
